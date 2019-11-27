@@ -1,8 +1,5 @@
 import requests as rq
-import re
 import sys
-import json
-import pprint as ppr
 import vk_requests as vkr
 import tkinter as tk
 import time
