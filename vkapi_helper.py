@@ -85,6 +85,7 @@ class CreateMyWidgets:
         self.IntVar = tk.IntVar()
         self.load_bool = False
         self.state_test = True
+        self.button_state = True
 
         self.entry_q = tk.Entry(root, fg='#2087F6')       # запрос
         self.entry_city = tk.Entry(root)    # город(родной)
@@ -152,6 +153,16 @@ class CreateMyWidgets:
 
     def click_search(self, foo):
         self.btn_search.bind('<Button-1>', foo)
+        self.button_state = False
+
+
+    def active_button(self, state:bool = True):
+        if state == False:
+            self.btn_search.configure(state = 'disabled', bg = 'grey')
+            print(False, 'state')
+        else:
+            self.btn_search.configure(state = 'normal', bg = 'blue')
+            print(True, 'state')
 
 
     def set_text(self, text):
@@ -305,7 +316,8 @@ class LoaderImg:
 
 
     def delete_img(self, file_path):
-        pass
+        os.remove(file_path)
+        return file_path+'  deleted.'
 
 
 

@@ -33,6 +33,7 @@ def processing(event):
     data_dict = api.data_dict
     time.sleep(1.3)
     widget.set_count_text(api.count_humans)
+    widget.active_button(False)
     for data in data_dict:
         info = img_file.load_img(data_dict[data][0], 'jpg', data )
         widget.set_text(info[0])
@@ -44,6 +45,7 @@ def processing(event):
         else:
             print(info[0])
         time.sleep(.850)
+    widget.active_button(state = True)
 
 
 widget.click_search(processing)
