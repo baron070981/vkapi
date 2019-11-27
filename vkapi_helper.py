@@ -8,10 +8,33 @@ import datetime
 from PIL import ImageTk, Image
 from tkinter import messagebox
 
-login = '0000000000' # номер телефона, строка
-password = 'xxxxxxxxxx' # password, строка
-apiid = 0 # apiid приложения, число
-m = 0
+
+def load_user_data( filename ):
+    # загружает данные из файла
+    # файл с данными создается отдельно и содержит apiid приложения, логин, пароль
+    s = ''
+    lst = list()
+    login = ''
+    password = ''
+    apiid = 0
+    with open(filename, 'r') as f:
+        while True:
+            data = f.readline()
+            if not data:
+                break
+            s += data
+    s = s.split('\n')
+    for data in s:
+        lst.append(data.split('='))
+    for data in lst:
+        if data[0].strip() == 'login':
+            login = data[1].strip()
+        if data[0].strip() == 'password':
+            password = data[1].strip()
+        if data[0].strip() == 'apiid':
+            apiid = int(data[1].strip())
+    return login, password, apiid
+
 
 class CreateMainWindow(tk.Tk):
 
@@ -63,22 +86,16 @@ class CreateMyWidgets:
         self.load_bool = False
         self.state_test = True
 
-        self.entry_log = tk.Entry(root, fg='red', bg = 'green')     # ввод логина
-        self.entry_pas = tk.Entry(root, fg='red', bg = 'green')     # ввод пароля
         self.entry_q = tk.Entry(root, fg='#2087F6')       # запрос
         self.entry_city = tk.Entry(root)    # город(родной)
         self.entry_findall = tk.Entry(root, fg = 'red')   # дата рождения
         self.entry_count = tk.Entry(root, fg='#2087F6')   # число поиска
         self.entry_path = tk.Entry(root, fg = 'blue')
 
-        self.entry_log.insert(0, '89992948531')
-        self.entry_pas.insert(0, 'baron070981')
         self.entry_q.insert(0, 'Дмитрий')
         self.entry_count.insert(0, '10')
         self.entry_path.insert(0, 'folder_loader_img')
 
-        self.label_log = tk.Label(root, text = 'логин:', anchor = tk.E)
-        self.label_pas = tk.Label(root, text = 'пароль:', anchor = tk.E)
         self.label_q = tk.Label(root, text = 'запрос:', anchor = tk.E)
         self.label_city = tk.Label(root, text = 'город:', anchor = tk.E)
         self.label_findall = tk.Label(root, text = 'Найдено:', anchor = tk.E, fg = 'red')
@@ -98,45 +115,39 @@ class CreateMyWidgets:
 
 
     def position_widgets(self, root):
-        self.label_log.grid(column = 0, row = 0, sticky = tk.N + tk.S + tk.W + tk.E, pady = 1)
-        self.entry_log.grid(column = 1, row = 0, sticky = tk.N + tk.S + tk.W + tk.E, padx = 2, pady = 3)
 
-        self.label_pas.grid(column = 2, row = 0, sticky = tk.N + tk.S + tk.W + tk.E, pady = 1)
-        self.entry_pas.grid(column = 3, row = 0, sticky = tk.N + tk.S + tk.W + tk.E, padx = 2, pady = 3)
+        self.label_q.grid(column = 0, row = 0, sticky = tk.N + tk.S + tk.W + tk.E, pady = 1)
+        self.entry_q.grid(column = 1, row = 0, columnspan = 3, sticky = tk.N + tk.S + tk.W + tk.E, padx = 2, pady = 1)
 
-        self.label_q.grid(column = 0, row = 1, sticky = tk.N + tk.S + tk.W + tk.E, pady = 1)
-        self.entry_q.grid(column = 1, row = 1, columnspan = 3, sticky = tk.N + tk.S + tk.W + tk.E, padx = 2, pady = 1)
+        self.label_city.grid(column = 0, row = 1, sticky = tk.N + tk.S + tk.W + tk.E, pady = 1)
+        self.entry_city.grid(column = 1, row = 1, columnspan = 3, sticky = tk.N + tk.S + tk.W + tk.E, padx = 2, pady = 3)
 
-        self.label_city.grid(column = 0, row = 2, sticky = tk.N + tk.S + tk.W + tk.E, pady = 1)
-        self.entry_city.grid(column = 1, row = 2, columnspan = 3, sticky = tk.N + tk.S + tk.W + tk.E, padx = 2, pady = 3)
+        self.label_age_from.grid(column = 0, row = 2, sticky = tk.N + tk.S + tk.W + tk.E, pady = 1)
+        self.spin_age_from.grid(column = 1, row = 2, sticky = tk.N + tk.S + tk.W + tk.E, padx = 2, pady = 3)
 
-        self.label_age_from.grid(column = 0, row = 3, sticky = tk.N + tk.S + tk.W + tk.E, pady = 1)
-        self.spin_age_from.grid(column = 1, row = 3, sticky = tk.N + tk.S + tk.W + tk.E, padx = 2, pady = 3)
+        self.label_age_to.grid(column = 2, row = 2, sticky = tk.N + tk.S + tk.W + tk.E, pady = 1)
+        self.spin_age_to.grid(column = 3, row = 2, sticky = tk.N + tk.S + tk.W + tk.E, padx = 2, pady = 3)
 
-        self.label_age_to.grid(column = 2, row = 3, sticky = tk.N + tk.S + tk.W + tk.E, pady = 1)
-        self.spin_age_to.grid(column = 3, row = 3, sticky = tk.N + tk.S + tk.W + tk.E, padx = 2, pady = 3)
+        self.label_findall.grid(column = 0, row = 3, sticky = tk.N + tk.S + tk.W + tk.E, pady = 1)
+        self.entry_findall.grid(column = 1, row = 3, sticky = tk.N + tk.S + tk.W + tk.E, padx = 2, pady = 3)
 
-        self.label_findall.grid(column = 0, row = 4, sticky = tk.N + tk.S + tk.W + tk.E, pady = 1)
-        self.entry_findall.grid(column = 1, row = 4, sticky = tk.N + tk.S + tk.W + tk.E, padx = 2, pady = 3)
+        self.label_count.grid(column = 2, row = 3, sticky = tk.N + tk.S + tk.W + tk.E, pady = 1)
+        self.entry_count.grid(column = 3, row = 3, sticky = tk.N + tk.S + tk.W + tk.E, padx = 2, pady = 3)
 
-        self.label_count.grid(column = 2, row = 4, sticky = tk.N + tk.S + tk.W + tk.E, pady = 1)
-        self.entry_count.grid(column = 3, row = 4, sticky = tk.N + tk.S + tk.W + tk.E, padx = 2, pady = 3)
+        self.label_path.grid(column = 0, row = 4, sticky = tk.N + tk.S + tk.W + tk.E, pady = 1)
+        self.entry_path.grid(column= 1, row = 4, columnspan = 3, sticky = tk.N + tk.S + tk.W + tk.E, padx = 2, pady = 3)
 
-        self.label_path.grid(column = 0, row = 5, sticky = tk.N + tk.S + tk.W + tk.E, pady = 1)
-        self.entry_path.grid(column= 1, row = 5, columnspan = 3, sticky = tk.N + tk.S + tk.W + tk.E, padx = 2, pady = 3)
+        self.btn_search.grid(column = 1, columnspan = 2, row = 5, sticky = tk.N + tk.S + tk.W + tk.E, pady = 3)
 
-        self.btn_search.grid(column = 1, columnspan = 2, row = 6, sticky = tk.N + tk.S + tk.W + tk.E, pady = 3)
-
-        self.check_load_state.grid(column = 3, row = 6)
+        self.check_load_state.grid(column = 3, row = 5)
 
         self.frm = tk.Frame(root)
-        self.frm.grid(column = 0, row = 7, columnspan = 4, sticky = tk.N + tk.S + tk.W + tk.E, padx = 2, pady = 3)
+        self.frm.grid(column = 0, row = 6, columnspan = 4, sticky = tk.N + tk.S + tk.W + tk.E, padx = 2, pady = 3)
 
         self.text_space = tk.Text(self.frm, bg = 'black', fg = '#86FF00', insertbackground='#FFFFFF') # текстовое поле для вывода инфо
         self.text_space.pack(side = tk.LEFT)
         scroll = tk.Scrollbar( self.frm, command = self.text_space.yview ) # скрол для текстового поля
         scroll.pack(side = tk.RIGHT, fill = tk.Y)
-        self.entry_pas.config(show = '*')
 
 
     def click_search(self, foo):

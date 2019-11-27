@@ -11,14 +11,18 @@ import vkapi_helper as vkh
 
 fields = ['has_mobile', 'photo_big', 'city', 'bdate', 'connections', 'home_town', 'photo_400_orig']
 
-
+login = '89992948531'
+password = 'baron070981'
+apiid = 7211649
 
 root = vkh.CreateMainWindow(flag = True)
 widget = vkh.CreateMyWidgets(root)
 widget.position_widgets(root)
 root.create_subwindow()
 
-api = vkh.ApiHelper(vkh.apiid, vkh.login, vkh.password)
+login, password, apiid = vkh.load_user_data('data_user.txt')
+
+api = vkh.ApiHelper(apiid, login, password)
 
 def processing(event):
     widget.get_text_from_entry()
