@@ -34,9 +34,9 @@ def processing(event):
     time.sleep(1.3)
     widget.set_count_text(api.count_humans)
     widget.active_button(False)
-    for data in data_dict:
+    for i, data in enumerate(data_dict):
         info = img_file.load_img(data_dict[data][0], 'jpg', data )
-        widget.set_text(info[0])
+        widget.set_text(str(i+1)+'. '+info[0])
         root.update()
         root.update_subwindow(info[1], data_dict[data][1])
         if not widget.load_bool:
