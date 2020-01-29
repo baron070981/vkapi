@@ -11,9 +11,9 @@ import vkapi_helper as vkh
 
 fields = ['has_mobile', 'photo_big', 'city', 'bdate', 'connections', 'home_town', 'photo_400_orig']
 
-login = '89992948531'
-password = 'baron070981'
-apiid = 7211649
+login = ''
+password = ''
+apiid = 0
 
 root = vkh.CreateMainWindow(flag = True)
 widget = vkh.CreateMyWidgets(root)
